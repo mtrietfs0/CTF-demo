@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>CTF Zone - Simple Version</title>
+    <style>
+        body { background-color: #0d1117; color: #58a6ff; font-family: 'Courier New', monospace; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; border: 1px solid #30363d; padding: 20px; position: relative; }
+        h1 { border-bottom: 1px solid #30363d; }
+        .challenge { margin-top: 20px; background: #161b22; padding: 15px; border-radius: 6px; }
+        input { background: #0d1117; border: 1px solid #30363d; color: white; padding: 5px; width: 60%; }
+        
+        /* Style cho trạng thái đã hoàn thành */
+        input.solved { border-color: #3fb950; color: #3fb950; font-weight: bold; }
+        input:disabled { background: #21262d; cursor: not-allowed; }
+        
+        button { background: #238636; color: white; border: none; padding: 5px 15px; cursor: pointer; }
+        button:disabled { background: #8b949e; cursor: not-allowed; }
+        
+        .result { margin-top: 10px; font-weight: bold; }
+        .correct { color: #3fb950; }
+        .wrong { color: #f85149; }
+        
+        .next-level-btn {
+            display: inline-block; margin-top: 30px; padding: 15px 30px;
+            background: #1f6feb; color: white; text-decoration: none; font-weight: bold; border-radius: 5px;
+        }
+        
+        .reset-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: #da3633; font-size: 0.8em; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="resetGame()" class="reset-btn">🔄 Reset Game</button>
+        <h1>🚩 CTF TRAINING - PART 1</h1>
+
+        <div class="challenge">
+            <h3>Level 1: URL ẩn giấu</h3>
+            <p>Flag nằm ngay trên thanh địa chỉ trình duyệt.</p>
+            <input type="text" id="ans1" placeholder="Nhập Flag 1...">
+            <button id="btn1" onclick="check(1)">Kiểm tra</button>
+            <div id="res1" class="result"></div>
+        </div>
+
+        <div class="challenge">
+            <h3>Level 2: Source Code</h3>
+            <p>View Source (F12) để tìm điều bất thường.</p>
+            <input type="text" id="ans2" placeholder="Nhập Flag 2...">
+            <button id="btn2" onclick="check(2)">Kiểm tra</button>
+            <div id="res2" class="result"></div>
+        </div>
+
+        <a href="level3.html" class="next-level-btn">👉 CHUYỂN SANG LEVEL 3</a>
+    </div>
+
+    <script>
+        // CẤU HÌNH ĐÁP ÁN (Dạng văn bản thường - Plaintext)
+        const answers = {
+            1: "CTF{nhin_len_thanh_url_ki}",
+            2: "CTF{html_source_code_is_fun}"
+        };
+
+        window.onload = function() {
+            // Logic tự động thêm Flag vào URL cho Câu 1
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.has('token')) {
+                var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?token=CTF{nhin_len_thanh_url_ki}';
+                window.history.pushState({path:newurl},'',newurl);
+            }
+
+            // Tải lại tiến độ người chơi đã lưu
+            loadProgress();
+        };
+
+        function check(level) {
+            // Lấy dữ liệu người dùng nhập
+            let input = document.getElementById('ans'+level).value.trim();
+            let resBox = document.getElementById('res'+level);
+            
+            // So sánh trực tiếp với đáp án trong biến 'answers'
+            if (input === answers[level]) {
+                markSolved(level); // Nếu đúng, lưu và cập nhật giao diện
+            } else {
+                resBox.innerHTML = "Sai rồi! ❌";
+                resBox.className = "result wrong";
+            }
+        }
+
+        // --- CÁC HÀM HỖ TRỢ LƯU TRỮ (GIỮ NGUYÊN) ---
+
+        function markSolved(level) {
+            // 1. Lưu vào LocalStorage
+            localStorage.setItem('ctf_level_' + level, 'solved');
+            // 2. Cập nhật giao diện
+            updateUI(level);
+        }
+
+        function updateUI(level) {
+            let input = document.getElementById('ans' + level);
+            let btn = document.getElementById('btn' + level);
+            let resBox = document.getElementById('res' + level);
+
+            // Hiện đáp án ra luôn cho người dùng thấy
+            input.value = answers[level]; 
+            input.classList.add('solved');
+            input.disabled = true;
+            
+            btn.innerText = "Đã xong";
+            btn.disabled = true;
+            
+            resBox.innerHTML = "Chính xác! ✅";
+            resBox.className = "result correct";
+        }
+
+        function loadProgress() {
+            // Kiểm tra xem level 1 và 2 đã giải chưa
+            for (let i = 1; i <= 2; i++) {
+                if (localStorage.getItem('ctf_level_' + i) === 'solved') {
+                    updateUI(i);
+                }
+            }
+        }
+
+        function resetGame() {
+            if(confirm("Bạn có chắc muốn xóa toàn bộ tiến độ chơi không?")) {
+                localStorage.clear(); // Xóa sạch bộ nhớ
+                location.reload();    // Tải lại trang
+            }
+        }
+    </script>
+</body>
+</html>
