@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Zone - Khởi động</title>
+    <style>
+        body { 
+            background-color: #0d1117; 
+            color: #c9d1d9; 
+            font-family: 'Courier New', Courier, monospace; 
+            padding: 20px; 
+            line-height: 1.6; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding-bottom: 80px; 
+        }
+        
+        /* HEADER */
+        header { text-align: center; border-bottom: 1px solid #30363d; margin-bottom: 30px; }
+        h1 { color: #58a6ff; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .intro-box {
+            background-color: #161b22;
+            border-left: 5px solid #1f6feb;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 4px;
+        }
+        .intro-box h3 { color: #58a6ff; margin-top: 15px; margin-bottom: 5px; }
+        .intro-box p { margin-top: 5px; }
+        .intro-box ul { padding-left: 20px; margin-top: 5px; }
+        .intro-box li { margin-bottom: 5px; }
+        .intro-box code { background: #30363d; padding: 2px 5px; border-radius: 3px; color: #79c0ff; }
+
+        .challenge { 
+            background-color: #161b22; 
+            border: 1px solid #30363d; 
+            padding: 20px; 
+            border-radius: 6px; 
+            margin-bottom: 30px; 
+            position: relative;
+        }
+        .challenge h3 { margin-top: 0; color: #79c0ff; border-bottom: 1px dashed #30363d; padding-bottom: 10px; }
+        
+        .video-wrapper {
+            background: black;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+            text-align: center;
+            border: 1px solid #30363d;
+        }
+        video {
+            width: 100%;
+            max-height: 400px;
+            outline: none;
+        }
+
+        input { 
+            background: #0d1117; border: 1px solid #30363d; color: white; 
+            padding: 12px; width: 60%; font-family: inherit; border-radius: 4px; outline: none;
+        }
+        input:focus { border-color: #58a6ff; }
+        input.solved { border-color: #238636; color: #238636; font-weight: bold; background: #0d1117; }
+        
+        button { 
+            background: #238636; color: white; border: none; 
+            padding: 12px 25px; cursor: pointer; border-radius: 4px; font-weight: bold;
+            margin-left: 10px; transition: 0.2s;
+        }
+        button:hover { background: #2ea043; }
+        button:disabled { background: #21262d; color: #484f58; cursor: not-allowed; }
+        
+        .result { margin-top: 15px; font-weight: bold; min-height: 24px; }
+        .correct { color: #3fb950; text-shadow: 0 0 5px #3fb950; }
+        .wrong { color: #f85149; }
+        
+        .reset-btn {
+            float: right; background: transparent; border: 1px solid #da3633; color: #da3633;
+            font-size: 0.8em; padding: 5px 10px; margin-bottom: 10px; cursor: pointer;
+        }
+        .reset-btn:hover { background: #da3633; color: white; }
+
+        .next-level-btn {
+            display: block; text-align: center; margin-top: 40px; padding: 20px;
+            background: #1f6feb; color: white; text-decoration: none; font-weight: bold; 
+            border-radius: 6px; font-size: 1.2em;
+        }
+        .next-level-btn:hover { background: #388bfd; box-shadow: 0 0 15px #1f6feb; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button onclick="resetGame()" class="reset-btn">🔄 Reset Game</button>
+    
+    <header>
+        <h1>🚩 CTF TRAINING ZONE</h1>
+        <p>Sân chơi nhập môn An toàn thông tin</p>
+    </header>
+
+    <div class="intro-box">
+        <h3>1. CTF là gì?</h3>
+        <p>CTF (viết tắt của <strong>Capture The Flag</strong> - Cướp cờ) là một cuộc thi kiến thức chuyên sâu về bảo mật máy tính. Thay vì tấn công lẫn nhau, người chơi sẽ đóng vai hacker để tìm ra các lỗi bảo mật trong hệ thống được dựng sẵn.</p>
+
+        <h3>2. Mục đích của CTF:</h3>
+        <ul>
+            <li>Rèn luyện tư duy logic và kỹ năng giải quyết vấn đề.</li>
+            <li>Học các kỹ thuật tấn công và phòng thủ mạng thực tế.</li>
+            <li>Hiểu rõ cách vận hành của Website, Mã hóa, Hệ điều hành...</li>
+        </ul>
+
+        <h3>3. Cách chơi:</h3>
+        <ul>
+            <li>Nhiệm vụ của bạn là tìm ra một đoạn văn bản bí mật gọi là <strong>"Flag"</strong>.</li>
+            <li>Flag thường có định dạng chuẩn. Ví dụ trong game này là: <code>CTF{noi_dung_bi_mat}</code>.</li>
+            <li>Sau khi tìm thấy, hãy copy và dán vào ô nhập đáp án để ghi điểm.</li>
+        </ul>
+    </div>
+    <div class="challenge">
+        <h3>Level 1: Thông tin lộ lọt trên URL</h3>
+        <p>Hacker luôn kiểm tra thanh địa chỉ (URL) đầu tiên. Đôi khi các tham số quan trọng lại bị hiện rõ ngay trước mắt.</p>
+        <p><em>Gợi ý: URL.</em></p>
+        
+        <div>
+            <input type="text" id="ans1" placeholder="Nhập Flag (Ví dụ: CTF{...})">
+            <button id="btn1" onclick="check(1)">Kiểm tra</button>
+        </div>
+        <div id="res1" class="result"></div>
+    </div>
+
+    <div class="challenge">
+        <h3>Level 2: Bí mật trong Source Code</h3>
+        <p>Giao diện web chỉ là tảng băng nổi. HTML (Source code) phía sau mới chứa đựng sự thật.</p>
+        <p><em>Gợi ý: Mã nguồn của trang. Trên máy tính, chuột phải chọn "View page source" để tìm.</em></p>
+
+        <div class="video-wrapper">
+            <p style="margin: 0 0 10px 0; color: #8b949e; font-size: 0.9em;">🎥 Video hướng dẫn dành cho điện thoại</p>
+            <video controls>
+                <source src="video.mp4" type="video/mp4">
+                Trình duyệt của bạn không hỗ trợ thẻ video hoặc file video.mp4 không tồn tại.
+            </video>
+        </div>
+        
+        <div>
+            <input type="text" id="ans2" placeholder="Nhập Flag tìm được...">
+            <button id="btn2" onclick="check(2)">Kiểm tra</button>
+        </div>
+        <div id="res2" class="result"></div>
+    </div>
+
+    <a href="level3.html" class="next-level-btn">👉 TIẾP TỤC ĐẾN LEVEL 3</a>
+</div>
+
+<script>
+    const answers = {
+        1: "CTF{nhin_len_thanh_url_ki}",
+        2: "CTF{html_source_code_is_fun}"
+    };
+
+    // --- LOGIC CHÍNH ---
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('token')) {
+            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?token=CTF{nhin_len_thanh_url_ki}';
+            window.history.pushState({path:newurl},'',newurl);
+        }
+
+        loadProgress();
+    };
+
+    function check(level) {
+        let input = document.getElementById('ans'+level).value.trim();
+        let resBox = document.getElementById('res'+level);
+        
+        // Kiểm tra đáp án
+        if (input === answers[level]) {
+            markSolved(level);
+        } else {
+            resBox.innerHTML = "Sai rồi! ❌ Hãy thử lại.";
+            resBox.className = "result wrong";
+            
+            document.getElementById('ans'+level).style.borderColor = "#f85149";
+            setTimeout(() => { 
+                document.getElementById('ans'+level).style.borderColor = "#30363d"; 
+            }, 500);
+        }
+    }
+
+    function markSolved(level) {
+        localStorage.setItem('ctf_level_' + level, 'solved');
+        updateUI(level);
+    }
+
+    function updateUI(level) {
+        let input = document.getElementById('ans' + level);
+        let btn = document.getElementById('btn' + level);
+        let resBox = document.getElementById('res' + level);
+
+        input.value = answers[level];
+        input.classList.add('solved');
+        input.disabled = true; 
+        
+        btn.innerText = "Đã xong";
+        btn.disabled = true;   
+        
+        resBox.innerHTML = "Chính xác! ✅ Code đúng là: " + answers[level];
+        resBox.className = "result correct";
+    }
+
+    function loadProgress() {
+        for (let i = 1; i <= 2; i++) {
+            if (localStorage.getItem('ctf_level_' + i) === 'solved') {
+                updateUI(i);
+            }
+        }
+    }
+
+    function resetGame() {
+        if(confirm("Bạn có chắc muốn xóa toàn bộ tiến độ chơi không?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>
