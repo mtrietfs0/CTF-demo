@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Zone - Nhập Môn</title>
+    <style>
+        /* Cấu hình giao diện chung */
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Courier New', monospace; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding-bottom: 50px; }
+        
+        /* Phần tiêu đề */
+        header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #30363d; padding-bottom: 20px; }
+        h1 { color: #58a6ff; margin: 0; }
+        
+        /* Phần lý thuyết (Intro) */
+        .intro-box {
+            background-color: #161b22;
+            border-left: 5px solid #1f6feb;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 0 6px 6px 0;
+        }
+        .intro-box h2 { margin-top: 0; color: #58a6ff; }
+        .intro-box ul { padding-left: 20px; }
+        .intro-box li { margin-bottom: 10px; }
+        
+        /* Phần thử thách (Challenges) */
+        .challenge { 
+            background-color: #161b22; 
+            border: 1px solid #30363d; 
+            padding: 20px; 
+            border-radius: 6px; 
+            margin-bottom: 20px; 
+            position: relative;
+        }
+        .challenge h3 { margin-top: 0; color: #79c0ff; }
+        
+        /* Video Container */
+        .video-container {
+            margin: 15px 0;
+            text-align: center; /* Căn giữa video */
+        }
+        .video-container iframe {
+            max-width: 100%; /* Responsive cho điện thoại */
+            border-radius: 4px;
+            border: 1px solid #30363d;
+        }
+        
+        /* Input và Button */
+        input { 
+            background: #0d1117; border: 1px solid #30363d; color: white; 
+            padding: 10px; width: 60%; font-family: inherit; border-radius: 4px;
+        }
+        input.solved { border-color: #238636; color: #238636; font-weight: bold; background: #0d1117; }
+        
+        button { 
+            background: #238636; color: white; border: none; 
+            padding: 10px 20px; cursor: pointer; border-radius: 4px; font-weight: bold;
+            margin-left: 10px;
+        }
+        button:hover { background: #2ea043; }
+        button:disabled { background: #30363d; color: #8b949e; cursor: not-allowed; }
+        
+        /* Thông báo kết quả */
+        .result { margin-top: 15px; font-weight: bold; }
+        .correct { color: #3fb950; }
+        .wrong { color: #f85149; }
+        
+        /* Nút chuyển level và Reset */
+        .next-level-btn {
+            display: block; text-align: center; margin-top: 40px; padding: 15px;
+            background: #1f6feb; color: white; text-decoration: none; font-weight: bold; border-radius: 6px;
+        }
+        .next-level-btn:hover { background: #388bfd; }
+        
+        .reset-btn {
+            float: right;
+            background: transparent; border: 1px solid #da3633; color: #da3633;
+            font-size: 0.8em; padding: 5px 10px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button onclick="resetGame()" class="reset-btn">🔄 Reset Dữ liệu</button>
+    
+    <header>
+        <h1>🚩 CTF TRAINING ZONE</h1>
+        <p>Sân chơi thực hành An toàn thông tin cho người mới bắt đầu</p>
+    </header>
+
+    <div class="intro-box">
+        <h2>🔰 Kiến thức cơ bản</h2>
+        <p><strong>1. CTF là gì?</strong>: Là cuộc thi Cướp cờ (Capture The Flag), nơi bạn đóng vai hacker tìm lỗi bảo mật.</p>
+        <p><strong>2. Mục đích</strong>: Rèn luyện tư duy bảo mật và kỹ năng IT.</p>
+        <p><strong>3. Cách chơi</strong>: Tìm chuỗi ký tự bí mật (Flag) có dạng <code>CTF{...}</code> và nhập vào ô đáp án.</p>
+    </div>
+
+    <div class="challenge">
+        <h3>Level 1: Dấu vết trên đường dẫn</h3>
+        <p>Gợi ý: Flag đang nằm ngay trên <strong>URL</strong> (thanh địa chỉ) của trang web này.</p>
+        
+        <div>
+            <input type="text" id="ans1" placeholder="Nhập Flag (VD: CTF{...})">
+            <button id="btn1" onclick="check(1)">Kiểm tra</button>
+        </div>
+        <div id="res1" class="result"></div>
+    </div>
+
+    <div class="challenge">
+        <h3>Level 2: Mã nguồn không nói dối</h3>
+        <p>Flag được giấu trong mã nguồn HTML (Source Code). Hãy "View Source" để tìm nó.</p>
+        
+        <div class="video-container">
+            <p style="font-size: 0.9em; color: #8b949e; margin-bottom: 5px;">
+                💡 <strong>Mẹo:</strong> Nếu dùng điện thoại, hãy xem hướng dẫn cách View Source tại đây:
+            </p>
+            <iframe width="560" height="315" src="https://www.youtube.com/watch?v=vBgOoNSBxDc" 
+                title="Hướng dẫn xem Source Code trên Android" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+        
+        <div>
+            <input type="text" id="ans2" placeholder="Nhập Flag...">
+            <button id="btn2" onclick="check(2)">Kiểm tra</button>
+        </div>
+        <div id="res2" class="result"></div>
+    </div>
+
+    <a href="level3.html" class="next-level-btn">👉 ĐI TIẾP ĐẾN LEVEL 3 (ADVANCED)</a>
+</div>
+
+<script>
+    const answers = {
+        1: "CTF{nhin_len_thanh_url_ki}",
+        2: "CTF{html_source_code_is_fun}"
+    };
+
+    window.onload = function() {
+        // Tự động thêm Flag vào URL cho câu 1
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('token')) {
+            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?token=CTF{nhin_len_thanh_url_ki}';
+            window.history.pushState({path:newurl},'',newurl);
+        }
+        loadProgress();
+    };
+
+    function check(level) {
+        let input = document.getElementById('ans'+level).value.trim();
+        let resBox = document.getElementById('res'+level);
+        
+        if (input === answers[level]) {
+            markSolved(level);
+        } else {
+            resBox.innerHTML = "Sai rồi! ❌ Hãy thử lại.";
+            resBox.className = "result wrong";
+        }
+    }
+
+    function markSolved(level) {
+        localStorage.setItem('ctf_level_' + level, 'solved');
+        updateUI(level);
+    }
+
+    function updateUI(level) {
+        let input = document.getElementById('ans' + level);
+        let btn = document.getElementById('btn' + level);
+        let resBox = document.getElementById('res' + level);
+
+        input.value = answers[level];
+        input.classList.add('solved');
+        input.disabled = true;
+        btn.innerText = "Đã xong";
+        btn.disabled = true;
+        
+        resBox.innerHTML = "Chính xác! ✅";
+        resBox.className = "result correct";
+    }
+
+    function loadProgress() {
+        for (let i = 1; i <= 2; i++) {
+            if (localStorage.getItem('ctf_level_' + i) === 'solved') {
+                updateUI(i);
+            }
+        }
+    }
+
+    function resetGame() {
+        if(confirm("Xóa toàn bộ tiến độ?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>
