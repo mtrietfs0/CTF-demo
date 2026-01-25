@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>CTF Zone - Level 3 (Secure)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        /* --- GIAO DIỆN DARK MODE --- */
+        body { background-color: #0d1117; color: #e3b341; font-family: 'Courier New', monospace; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; border: 1px solid #e3b341; padding: 20px; position: relative; box-shadow: 0 0 15px #e3b341; }
+        
+        h1 { border-bottom: 1px solid #e3b341; margin-top: 0; }
+        .challenge { margin-top: 30px; }
+        
+        input { 
+            background: #0d1117; border: 1px solid #e3b341; color: white; 
+            padding: 12px; width: 60%; font-family: inherit; border-radius: 4px; outline: none;
+        }
+        input:focus { box-shadow: 0 0 5px #e3b341; }
+        input.solved { border-color: #3fb950; color: #3fb950; font-weight: bold; }
+        
+        button { 
+            background: #e3b341; color: black; border: none; 
+            padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-left: 10px;
+        }
+        button:hover { background: #f0c64d; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .hint { color: #8b949e; font-style: italic; margin-top: 15px; border-left: 3px solid #8b949e; padding-left: 10px; }
+        .result { margin-top: 15px; font-weight: bold; font-size: 1.1em; min-height: 24px; }
+        
+        .reset-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: #da3633; font-size: 0.8em; padding: 5px 10px; border-radius: 4px; color: white; border: none; cursor: pointer;
+        }
+        .back-link { color: #8b949e; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+        .back-link:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="resetGame()" class="reset-btn">🔄 Reset All</button>
+        <a href="index.html" class="back-link">&larr; Quay lại Level 1 & 2</a>
+        
+        <h1>⚠️ LEVEL 3: KHU VỰC CẤM</h1>
+
+        <div class="challenge">
+            <h3>Nhiệm vụ: Xâm nhập vào trang ẩn</h3>
+            <p>Người quản trị web đã giấu một trang web bí mật (chứa Flag) và cấm các Bot tìm kiếm truy cập vào đó.</p>
+            
+            <p class="hint">
+                💡 Gợi ý: Các Bot tìm kiếm thường đọc file <strong>robots.txt</strong> đầu tiên. Hãy kiểm tra nó.
+            </p>
+            
+            <br>
+            <input type="text" id="ans3" placeholder="Nhập Flag tìm được tại đây...">
+            <button id="btn3" onclick="check()">Gửi đáp án</button>
+            <div id="res" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const correctHash = "036808170ec1270785075db9534fca6a";
+
+        window.onload = function() {
+            if (localStorage.getItem('ctf_level_3') === 'solved') {
+                updateUI();
+            }
+        };
+
+        function check() {
+            let inputField = document.getElementById('ans3');
+            let resBox = document.getElementById('res');
+            
+            // 1. Lấy dữ liệu và XÓA KHOẢNG TRẮNG thừa (Trim)
+            // Điều này cực quan trọng vì người dùng hay copy thừa dấu cách
+            let userInput = inputField.value.trim();
+
+            if (userInput === "") {
+                resBox.innerHTML = "Vui lòng nhập đáp án!";
+                resBox.style.color = "#f85149";
+                return;
+            }
+
+            // 2. Kiểm tra xem thư viện đã tải được chưa
+            if (typeof CryptoJS === 'undefined') {
+                resBox.innerHTML = "Lỗi: Không tải được thư viện mã hóa. Hãy kiểm tra kết nối mạng!";
+                resBox.style.color = "orange";
+                return;
+            }
+
+            // 3. Mã hóa dữ liệu người dùng nhập bằng MD5
+            let userHash = CryptoJS.MD5(userInput).toString();
+            
+            // In ra console để Debug (nếu bạn cần kiểm tra xem nó đang ra mã gì)
+            console.log("Input:", userInput);
+            console.log("Hash:", userHash);
+            console.log("Expected:", correctHash);
+
+            // 4. So sánh
+            if (userHash === correctHash) {
+                localStorage.setItem('ctf_level_3', 'solved');
+                updateUI();
+            } else {
+                resBox.innerHTML = "Sai rồi! ❌ Hãy kiểm tra lại file robots.txt";
+                resBox.style.color = "#f85149";
+                
+                inputField.style.borderColor = "#f85149";
+                setTimeout(() => { inputField.style.borderColor = "#e3b341"; }, 500);
+            }
+        }
+
+        function updateUI() {
+            let input = document.getElementById('ans3');
+            let btn = document.getElementById('btn3');
+            let resBox = document.getElementById('res');
+
+            // Khi giải xong, ta mới hiện dòng chữ thông báo (hoặc hiện luôn đáp án nếu muốn)
+            input.value = "CTF{robots_txt_khong_bao_mat}"; 
+            input.classList.add('solved');
+            input.disabled = true;
+            btn.disabled = true;
+            btn.innerText = "Đã giải";
+            
+            resBox.innerHTML = "XUẤT SẮC! 🎉 Bạn đã hoàn thành nhiệm vụ.";
+            resBox.style.color = "#3fb950";
+        }
+
+        function resetGame() {
+            if(confirm("Xóa toàn bộ tiến độ và chơi lại từ đầu?")) {
+                localStorage.clear();
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>

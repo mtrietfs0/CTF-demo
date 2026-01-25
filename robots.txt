@@ -1,0 +1,2 @@
+User-agent: *
+Disallow: /cc6b1.html
