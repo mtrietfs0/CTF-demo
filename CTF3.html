@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>CTF Zone - Level 3 (Secure)</title>
+    <title>CTF Zone - Level 3 (Final)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         /* --- GIAO DIỆN DARK MODE --- */
@@ -17,7 +17,7 @@
             padding: 12px; width: 60%; font-family: inherit; border-radius: 4px; outline: none;
         }
         input:focus { box-shadow: 0 0 5px #e3b341; }
-        input.solved { border-color: #3fb950; color: #3fb950; font-weight: bold; }
+        input.solved { border-color: #3fb950; color: #3fb950; font-weight: bold; background: #0d1117; }
         
         button { 
             background: #e3b341; color: black; border: none; 
@@ -60,6 +60,7 @@
     </div>
 
     <script>
+        // --- CẤU HÌNH BẢO MẬT (MD5 HASH) ---
         const correctHash = "036808170ec1270785075db9534fca6a";
 
         window.onload = function() {
@@ -71,50 +72,44 @@
         function check() {
             let inputField = document.getElementById('ans3');
             let resBox = document.getElementById('res');
-            
-            let userInput = inputField.value.trim();
+            let userInput = inputField.value.trim(); // Xóa khoảng trắng thừa
 
-            if (userInput === "") {
-                resBox.innerHTML = "Vui lòng nhập đáp án!";
-                resBox.style.color = "#f85149";
-                return;
-            }
-
-            // 2. Kiểm tra xem thư viện đã tải được chưa
+            // Kiểm tra thư viện
             if (typeof CryptoJS === 'undefined') {
-                resBox.innerHTML = "Lỗi: Không tải được thư viện mã hóa. Hãy kiểm tra kết nối mạng!";
-                resBox.style.color = "orange";
+                resBox.innerHTML = "Lỗi: Không tải được thư viện mã hóa (Cần có mạng Internet).";
                 return;
             }
 
-            // 3. Mã hóa dữ liệu người dùng nhập bằng MD5
+            // Mã hóa input người dùng
             let userHash = CryptoJS.MD5(userInput).toString();
-            
-            // In ra console để Debug (nếu bạn cần kiểm tra xem nó đang ra mã gì)
-            console.log("Input:", userInput);
-            console.log("Hash:", userHash);
-            console.log("Expected:", correctHash);
 
-            // 4. So sánh
             if (userHash === correctHash) {
                 localStorage.setItem('ctf_level_3', 'solved');
-                updateUI();
+                
+                // Khi người dùng vừa nhập đúng, ta giữ nguyên cái họ vừa nhập để họ thấy
+                // Nhưng ta gọi updateUI để khóa lại
+                updateUI(true); 
             } else {
                 resBox.innerHTML = "Sai rồi! ❌";
                 resBox.style.color = "#f85149";
-                
                 inputField.style.borderColor = "#f85149";
                 setTimeout(() => { inputField.style.borderColor = "#e3b341"; }, 500);
             }
         }
 
-        function updateUI() {
+        // Tham số 'justSolved' để biết là người dùng vừa mới giải xong hay là load lại trang
+        function updateUI(justSolved = false) {
             let input = document.getElementById('ans3');
             let btn = document.getElementById('btn3');
             let resBox = document.getElementById('res');
 
-            // Khi giải xong, ta mới hiện dòng chữ thông báo (hoặc hiện luôn đáp án nếu muốn)
-            input.value = "CTF{robots_txt_khong_bao_mat}"; 
+            // --- SỬA LỖI Ở ĐÂY ---
+            // Thay vì điền Flag vào, chúng ta điền một chuỗi ẩn danh
+            if (!justSolved) {
+                input.value = "******************"; // Che đáp án đi khi F5
+            }
+            // Nếu justSolved = true thì giữ nguyên cái người dùng đang nhập
+            
             input.classList.add('solved');
             input.disabled = true;
             btn.disabled = true;
@@ -132,7 +127,4 @@
         }
     </script>
 </body>
-
 </html>
-
-
