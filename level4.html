@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Level 4</title>
+<style>
+body{
+  background:#020617;
+  color:#f87171;
+  font-family:Arial;
+  text-align:center;
+}
+.box{
+  border:2px solid #f87171;
+  box-shadow:0 0 15px #f87171;
+  padding:20px;
+  border-radius:12px;
+  width:350px;
+  margin:100px auto;
+}
+button{
+  background:#22c55e;
+  border:none;
+  padding:10px 20px;
+  border-radius:6px;
+  cursor:pointer;
+}
+input{
+  padding:8px;
+  border-radius:6px;
+  border:none;
+  width:80%;
+}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>🔴 LEVEL 4 – GIẢI MÃ</h2>
+<p>
+Thông điệp đã bị mã hóa bằng mã Caesar dịch tiến <b>5 chữ cái</b>:<br><br>
+<b>XJHWJY</b><br><br>
+Biết rằng: A → F<br>
+Hãy giải mã để tìm ra từ gốc.
+</p>
+
+<input type="text" id="answer" placeholder="Nhập đáp án...">
+<br><br>
+<button onclick="check()">XÁC NHẬN</button>
+</div>
+
+<script>
+function check(){
+  let user = document.getElementById("answer").value.toUpperCase().trim();
+
+  if(user === "SECRET"){
+    document.body.innerHTML =
+      "<h1>🏆 HOÀN THÀNH!</h1><p>Bạn đã vượt qua thử thách cuối cùng!</p>";
+  } else {
+    alert("❌ Chưa đúng, thử lại!");
+  }
+}
+</script>
+</body>
+</html>

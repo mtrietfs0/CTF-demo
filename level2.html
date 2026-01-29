@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Level 2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+body{background:#020617;color:#22c55e;font-family:Arial;text-align:center;}
+.box{background:#020617;border:2px solid #22c55e;box-shadow:0 0 15px #22c55e;padding:20px;border-radius:12px;width:350px;margin:100px auto;}
+button{background:#38bdf8;border:none;padding:10px 20px;border-radius:6px;}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>🛡 LEVEL 2 – MẬT KHẨU</h2>
+<p>Mật khẩu nào an toàn nhất?</p>
+<label><input type="radio" name="ans" value="1"> 123456</label><br>
+<label><input type="radio" name="ans" value="2"> lamlamlam</label><br>
+<label><input type="radio" name="ans" value="3"> L@M_2024!</label><br><br>
+<button onclick="check()">KIỂM TRA</button>
+<div id="result"></div>
+<div id="qrcode"></div>
+</div>
+
+<script>
+const NEXT_URL="https://yourweb.com/level3.html";
+function check(){
+ let ans=document.querySelector('input[name="ans"]:checked');
+ if(!ans) return alert("Chọn đáp án!");
+ if(ans.value==="3"){
+   document.getElementById("result").innerHTML="✅ Mật khẩu mạnh!";
+   new QRCode(document.getElementById("qrcode"),NEXT_URL);
+ }else alert("❌ Sai!");
+}
+</script>
+</body>
+</html>
