@@ -2,12 +2,15 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Level 4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 4 - Final Challenge</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <style>
 body{
   background:#020617;
   color:#f87171;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   text-align:center;
 }
 .box{
@@ -17,47 +20,121 @@ body{
   border-radius:12px;
   width:350px;
   margin:100px auto;
+  background-color: #0f172a; /* Thêm nền nhẹ cho hộp */
 }
 button{
   background:#22c55e;
+  color: white;
   border:none;
   padding:10px 20px;
   border-radius:6px;
   cursor:pointer;
+  font-weight: bold;
+  transition: 0.3s;
 }
+button:hover { background: #16a34a; }
+
 input{
-  padding:8px;
+  padding:10px;
   border-radius:6px;
   border:none;
   width:80%;
+  text-align: center;
+  outline: none;
 }
+
+/* Style cho QR Code */
+#qrcode {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 10px;
+  background: white; 
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  display: none; /* Ẩn mặc định */
+}
+
+/* Style cho dòng chữ hướng dẫn scan */
+#scan-hint {
+    display: none; /* Ẩn mặc định */
+    color: #94a3b8;
+    margin-top: 15px;
+    font-size: 0.9em;
+    font-style: italic;
+    animation: blink 2s infinite;
+}
+@keyframes blink { 50% { opacity: 0.6; } }
+
+#success-msg { display: none; }
 </style>
 </head>
 <body>
-<div class="box">
-<h2>🔴 LEVEL 4 – GIẢI MÃ</h2>
-<p>
-Thông điệp đã bị mã hóa bằng mã Caesar dịch tiến <b>5 chữ cái</b>:<br><br>
-<b>XJHWJY</b><br><br>
-Biết rằng: A → F<br>
-Hãy giải mã để tìm ra từ gốc.
-</p>
 
-<input type="text" id="answer" placeholder="Nhập đáp án...">
-<br><br>
-<button onclick="check()">XÁC NHẬN</button>
+<div class="box">
+    <div id="game-content">
+        <h2>🔴 LEVEL 4 – GIẢI MÃ</h2>
+        <p>
+        Thông điệp đã bị mã hóa bằng mã Caesar dịch tiến <b>5 chữ cái</b>:<br><br>
+        <b style="font-size: 24px; letter-spacing: 5px; color: white;">XJHWJY</b><br><br>
+        Biết rằng: A → F<br>
+        Hãy giải mã để tìm ra từ gốc.
+        </p>
+
+        <input type="text" id="answer" placeholder="Nhập đáp án...">
+        <br><br>
+        <button onclick="check()">XÁC NHẬN</button>
+    </div>
+
+    <div id="success-msg">
+        <h1 style="color: #22c55e; margin-bottom: 5px;">🏆 HOÀN THÀNH!</h1>
+        <p style="color: white; margin-top: 0;">Bạn đã vượt qua thử thách cuối cùng!</p>
+    </div>
+    
+    <div id="qrcode"></div>
+    
+    <p id="scan-hint">📲 Scan để tiến tới độ khó tiếp theo</p>
 </div>
 
 <script>
 function check(){
-  let user = document.getElementById("answer").value.toUpperCase().trim();
+    let user = document.getElementById("answer").value.toUpperCase().trim();
+    // Link đích của QR Code
+    const NEXT_URL = "https://mtrietfs0.github.io/CTF-demo/CTF12.html";
+    
+    if(user === "SECRET"){
+        // 1. Ẩn câu hỏi
+        document.getElementById("game-content").style.display = "none";
+        
+        // 2. Hiện lời chúc
+        document.getElementById("success-msg").style.display = "block";
+        
+        // 3. Hiện khung QR Code
+        const qrContainer = document.getElementById("qrcode");
+        qrContainer.style.display = "block";
+        
+        // 4. Hiện dòng chữ hướng dẫn scan
+        document.getElementById("scan-hint").style.display = "block";
+        
+        // 5. Tạo QR Code
+        // Xóa nội dung cũ nếu có để tránh tạo trùng lặp
+        qrContainer.innerHTML = ""; 
+        new QRCode(qrContainer, {
+            text: NEXT_URL,
+            width: 150,
+            height: 150,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
 
-  if(user === "SECRET"){
-    document.body.innerHTML =
-      "<h1>🏆 HOÀN THÀNH!</h1><p>Bạn đã vượt qua thử thách cuối cùng!</p>";
-  } else {
-    alert("❌ Chưa đúng, thử lại!");
-  }
+    } else {
+        alert("❌ Sai mã rồi! Hãy thử dịch ngược lại 5 ký tự xem sao?");
+        document.getElementById("answer").value = "";
+        document.getElementById("answer").focus();
+    }
 }
 </script>
 </body>
