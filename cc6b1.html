@@ -3,10 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Secret Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        body { background: black; color: red; text-align: center; font-family: courier; margin-top: 100px;}
+        body { 
+            background: black; 
+            color: red; 
+            text-align: center; 
+            font-family: courier; 
+            margin-top: 50px; /* Chỉnh lại chút cho đỡ bị che nếu màn hình nhỏ */
+            padding-bottom: 50px;
+        }
         h1 { font-size: 50px; }
-        .flag { border: 2px solid red; display: inline-block; padding: 20px; font-size: 24px; color: yellow; }
+        .flag { 
+            border: 2px solid red; 
+            display: inline-block; 
+            padding: 20px; 
+            font-size: 24px; 
+            color: yellow; 
+            margin-bottom: 30px; 
+        }
+
+        /* Style cho khung chứa QR Code */
+        #qrcode {
+            background-color: white; /* QR cần nền trắng để quét được */
+            padding: 15px;
+            width: fit-content;
+            margin: 0 auto 20px auto; /* Căn giữa */
+            border-radius: 8px;
+        }
+
+        /* Style cho dòng chữ hướng dẫn mới */
+        .instruction-text {
+            color: #00ff41; /* Màu xanh lá hacker cho nổi bật */
+            font-weight: bold;
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -16,7 +50,27 @@
     
     <div class="flag">CTF{robots_txt_khong_bao_mat}</div>
     
-    <p><br><a href="CTF3.html" style="color: white;">Quay lại trang chủ để nộp bài</a></p>
-</body>
+    <div id="qrcode"></div>
+    
+    <p class="instruction-text">
+        Hãy quay lại câu 3 để nhập câu trả lời và quét mã QR trên để tiến tới level tiếp theo
+    </p>
+    
+    <p><br><a href="CTF3.html" style="color: white; text-decoration: underline;">Quay lại trang chủ để nộp bài</a></p>
 
+    <script>
+        // Link Google Script của bạn
+        var nextLevelUrl = "https://script.google.com/macros/s/AKfycbzUL-mQsQA5WW0mjlqUUDo9i-USZuJkBCWQ2XQFmmXiKtpwqRdHP_nuVKEfn_hoNLw2/exec";
+
+        // Tạo mã QR
+        new QRCode(document.getElementById("qrcode"), {
+            text: nextLevelUrl,
+            width: 150,
+            height: 150,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.M
+        });
+    </script>
+</body>
 </html>
